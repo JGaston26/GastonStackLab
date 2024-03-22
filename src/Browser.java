@@ -44,7 +44,7 @@ public class Browser {
   //TODO
   //This method should display the webpage the user is currently on
   public void displayCurrentPage() {
-    System.out.println(currentPage);
+    System.out.println(currentPage.getContent());
   }
   //TODO
   //This method takes the name of the webpage the user wants to visit
@@ -55,7 +55,19 @@ public class Browser {
   //regardless of whether the Webpage was found or not,
   //the webpage the user is currently on should be displayed
   public void goToWebpage(String name) {
-
+    boolean found = false;
+    browserForward.clear();
+    browserBack.push(currentPage);
+        for(int i = 0; i < internet.size(); i++){
+            if(internet.get(i).getName().equals(name)){
+              currentPage = internet.get(i);
+              found = true;
+            }
+        }
+        if(!found) {
+      currentPage = new Webpage("Error 404", "Page not found");
+    }
+        displayCurrentPage();
   }
 
   //TODO
@@ -63,7 +75,13 @@ public class Browser {
   //If there is no webpage to go back to, print a message that explains
   //that the user cannot go back any further
   public void goBack() {
-    
+    if(browserBack.isEmpty()){
+      System.out.println("There is no Webpage to go back to.");
+    }else{
+      browserForward.push(currentPage);
+      currentPage = browserBack.peek();
+      browserBack.pop();
+    }
   }
   
   //TODO
@@ -72,7 +90,13 @@ public class Browser {
   //If there is no webpage to revisit, print a message that explains
   //that the user cannot go forward any further
   public void goForward() {
-    
+    if(browserForward.isEmpty()){
+      System.out.println("There is no Webpage to revisit");
+    }else{
+       browserBack.push(currentPage);
+       currentPage = browserForward.peek();
+       browserForward.pop();
+    }
   }
 
   //TODO
@@ -81,7 +105,17 @@ public class Browser {
   //If there is no browsing history to view
   //print a message that explains that to the user instead
   public void viewBrowserBackAndForward() {
-    
+    if(browserBack.isEmpty()){
+      System.out.println("No back browsing history to view");
+    }else{
+      System.out.println(browserBack.toString());
+    }
+
+    if(browserBack.isEmpty()){
+      System.out.println("No forward browsing history to view");
+    }else{
+      System.out.println(browserForward.toString());
+    }
   }
 
   public void run() {
